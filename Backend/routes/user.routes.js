@@ -5,6 +5,7 @@ const zod = require("zod");
 const { userModel } = require("../models/user.models");
 const userService = require("../services/user.service");
 const userAuthMiddleware = require("../middlewares/userAuthMiddleware");
+const BlacklistToken = require("../models/blacklistToken.model");
 router.post('/register' , async (req , res) => {
     try {
         const requiredBody = zod.object({
@@ -24,7 +25,7 @@ router.post('/register' , async (req , res) => {
             });
         }
 
-        const { email, password, fullName } = parsedData.data;
+        const { email, password, fullName = {} } = parsedData.data;
         const {firstName , lastName} = fullName;
 
         const hashedPass = await userModel.hashPassword(password);
@@ -86,7 +87,9 @@ router.post('/login', async (req, res , next) => {
         }
 
         const token = user.generateAuthToken();
-
+        
+        res.cookie('token' , token);
+        
         res.status(200).json({
             message: "User logged in succesfully!",
             token,
@@ -118,6 +121,17 @@ router.get('/profile' , userAuthMiddleware , (req, res , next) => {
             error: error.message
         });
     }
+})
+
+router.get('/logout' , userAuthMiddleware , async (req , res) => {
+    
+    res.clearCookie('token');
+
+    const token = req.cookies?.token || req.headers.authorization.split(' ')[1];
+
+    await BlacklistToken.create({token});
+
+    res.status(200).send("Logged out!");
 })
 
 module.exports = router

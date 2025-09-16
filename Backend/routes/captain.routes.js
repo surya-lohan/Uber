@@ -12,7 +12,7 @@ router.post('/register', async (req, res) => {
             firstName: zod.string(),
             lastName: zod.string().optional()
         }),
-        email: zod.string().email(),
+        email: zod.email(),
         password: zod.string().min(4),
         vehicle: zod.object({
             color: zod.string(),

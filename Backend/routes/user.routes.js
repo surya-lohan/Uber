@@ -9,16 +9,17 @@ const BlacklistToken = require("../models/blacklistToken.model");
 router.post('/register' , async (req , res) => {
     try {
         const requiredBody = zod.object({
-            email: zod.email(),
-            password: zod.string().min(8),
+            email: zod.string().email(),
+            password: zod.string().min(4),
             fullName: zod.object({
-                firstName : zod.string().min(3),
+                firstName : zod.string().min(2),
                 lastName: zod.string().optional()
             })
         })
 
         const parsedData = requiredBody.safeParse(req.body);
         if (!parsedData.success) {
+            console.log('Validation error:', parsedData.error.errors);
             return res.status(400).send({
                 message: "Invalid inputs!",
                 errors: parsedData.error.errors
@@ -26,6 +27,16 @@ router.post('/register' , async (req , res) => {
         }
 
         const { email, password, fullName = {} } = parsedData.data;
+        const isUserAlreadyExists = await userModel.findOne({
+            email: email
+        });
+
+        if (isUserAlreadyExists) {
+            return res.status(400).send({
+                message: "User already exists with this email id!"
+            })
+        }
+
         const {firstName , lastName} = fullName;
 
         const hashedPass = await userModel.hashPassword(password);
@@ -55,8 +66,8 @@ router.post('/register' , async (req , res) => {
 router.post('/login', async (req, res , next) => {
     try {
         const requiredBody = zod.object({
-            email: zod.email(),
-            password: zod.string().min(8)
+            email: zod.string().email(),
+            password: zod.string().min(4)
         })
 
         const parsedData = requiredBody.safeParse(req.body);

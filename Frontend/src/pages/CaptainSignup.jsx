@@ -11,14 +11,8 @@ const CaptainSignup = () => {
       const [lastName , setLastName] = useState(''); 
       const submitHandler = (e) => {
         e.preventDefault();
-        setCaptainData({
-          email: email,
-          password: password,
-          fullName: {
-            firstName: firstName,
-            lastName: lastName
-          }
-        });
+        
+        
         
         setEmail('');
         setFirstName('');

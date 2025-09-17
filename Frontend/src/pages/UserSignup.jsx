@@ -30,10 +30,10 @@ const UserSignup = () => {
         const data = response.data;
         console.log(data);
         navigate('/home')
-      }else{
+      } else{
         console.log("User already exists!")
       }
-      
+
       } catch (error) {
         console.log('Full error:', error);
         console.log('Error response:', error.response?.data);

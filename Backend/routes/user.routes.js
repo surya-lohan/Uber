@@ -101,7 +101,7 @@ router.post('/login', async (req, res , next) => {
         
         res.cookie('token' , token);
         
-        res.status(200).json({
+        res.status(200).send({
             message: "User logged in succesfully!",
             token,
             user

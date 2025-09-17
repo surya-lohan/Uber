@@ -13,7 +13,7 @@ async function userAuthMiddleware(req ,res ,next) {
     const isBlackListed = await BlacklistToken.findOne({token: token});
 
     if (isBlackListed) {
-        res.status(400).send({message: "Unautorised access!"})
+        return res.status(400).send({message: "Unautorised access!"})
     }
 
     try {

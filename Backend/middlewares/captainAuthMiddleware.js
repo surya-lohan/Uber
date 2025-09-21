@@ -3,7 +3,7 @@ const BlacklistToken = require('../models/blacklistToken.model');
 const captainModel = require('../models/captain.model');
 
 async function captainAuthMiddleware(req, res, next) {
-    const token = req.cookies?.token || (req.headers.authorization?.tokn && req.headers.authorization?.token.split()[' '][1]);
+    const token = req.cookies?.token || (req.headers.authorization && req.headers.authorization.split(' ')[1]);
     
     if (!token) {
         return res.status(401).send({

@@ -43,7 +43,7 @@ const CaptainSignup = () => {
       const data = response.data;
       console.log(data)
       setCaptain(data.captain)
-      navigate('/home')
+      navigate('/captain/home')
       alert(response.data.message)
     } catch (error) {
       console.log(error.response?.data?.message || error.message || error)

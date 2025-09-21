@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import Logo from '../assets/Logo.png'
 import axios from 'axios';
-import { CaptainDataContext } from '../context/CaptainContext';
+import {CaptainDataContext} from '../context/CaptainContext';
 
 const CaptainLogin = () => {
   const [email, setEmail] = useState('');
@@ -21,10 +21,11 @@ const CaptainLogin = () => {
     try {
       const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captain/login`, newCaptainData);
       const data = response.data;
-      setCaptain(data.captain)
-      navigate('/home')
+      setCaptain(data.captain);
+      localStorage.setItem('token' , data.token);
+      navigate('/captain/home')
     } catch (error) {
-
+      console.log(error.message)
     }
     setEmail('');
     setPassword('');
